@@ -122,6 +122,8 @@ public class Sensor {
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
 					server, port);
+			
+			packet.setSocketAddress(dstAddress);
 
 			// send packet
 			socket.send(packet);
