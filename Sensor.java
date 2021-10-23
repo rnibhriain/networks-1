@@ -50,7 +50,6 @@ public class Sensor {
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
 			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
-//			server = InetAddress.getByName(DEFAULT_DST_NODE);
 
 			System.out.println("Sensor Connected: " + socket);
 
@@ -121,9 +120,7 @@ public class Sensor {
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
-					server, port);
-			
-			packet.setSocketAddress(dstAddress);
+					dstAddress);
 
 			// send packet
 			socket.send(packet);

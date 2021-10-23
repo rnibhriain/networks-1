@@ -15,8 +15,6 @@ public class Broker {
 	static Boolean subscribed = false;
 	static DatagramSocket socket;
 
-	final static int DEST_PORT = 60183;
-
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
 
 	static InetAddress clientAdd;
@@ -26,8 +24,6 @@ public class Broker {
 	static InetAddress actuatorAdd;
 
 	static int actuatorPort;
-
-	static int port= DEST_PORT;
 
 	static InetAddress sensorAdd;
 
