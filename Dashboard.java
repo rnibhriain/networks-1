@@ -5,21 +5,25 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Dashboard {
 
 	static DatagramSocket socket;
-
+	
+	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
+	
 	static int port= DEST_PORT;
 
 	final static int MTU = 1500;
-
+	
+	static final String DEFAULT_DST_NODE = "broker";
 
 
 	public static void main(String[] args) {
@@ -129,7 +133,7 @@ public class Dashboard {
 			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
-			socket= new DatagramSocket();
+			dstAddress= new InetSocketAddress("broker", port);
 
 			System.out.println("Dashboard Connected: " + socket);
 

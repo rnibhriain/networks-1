@@ -5,15 +5,20 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Actuator {
 
 	static DatagramSocket socket;
+	
+	static InetSocketAddress dstAddress;
 
 
 	final static int DEST_PORT = 49000;
+	
+	static final String DEFAULT_DST_NODE = "broker";
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
 	static int port= DEST_PORT;
@@ -34,6 +39,28 @@ public class Actuator {
 		status = false;
 	}
 
+	
+	public static void connect () {
+
+
+		try {
+			System.out.println("Actuator is Connecting");
+
+			// extract destination from arguments
+			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
+			port= DEST_PORT;                       // Integer.parseInt(args[1]);
+
+			dstAddress= new InetSocketAddress("broker", port);
+
+			System.out.println("Actuator Connected: " + socket);
+
+
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public String toString () {
 		String data = "Actuator \nRoom Number: " + roomNo + "\nFloor Number: " + floor + "\nI.D. Number: " + id + "\nStatus: ";

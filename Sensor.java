@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -12,11 +13,15 @@ public class Sensor {
 
 	static DatagramSocket socket;
 
+	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
 	static int port= DEST_PORT;
+	
+	static final String DEFAULT_DST_NODE = "broker";
+
 
 	final static int MTU = 1500;
 
@@ -32,6 +37,28 @@ public class Sensor {
 		temp = 22;
 	}
 
+	
+	public static void connect () {
+
+
+		try {
+			System.out.println("Sensor is Connecting");
+
+			// extract destination from arguments
+			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
+			port= DEST_PORT;                       // Integer.parseInt(args[1]);
+
+			dstAddress= new InetSocketAddress("broker", port);
+
+			System.out.println("Sensor Connected: " + socket);
+
+
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public String toString () {
 
@@ -106,14 +133,12 @@ public class Sensor {
 	}
 
 	public static void main(String[] args) {
-
+		
+		connect();
+		
 		try {
-			address= InetAddress.getLocalHost();
 			socket= new DatagramSocket();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   // InetAddress.getByName(args[0]);
+		}  // InetAddress.getByName(args[0]);
 		catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
