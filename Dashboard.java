@@ -129,13 +129,11 @@ public class Dashboard {
 		try {
 			System.out.println("Dashboard is Connecting");
 
-			// extract destination from arguments
-			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
 			dstAddress= new InetSocketAddress("broker", port);
 
-			System.out.println("Dashboard Connected: " + socket);
+			System.out.println("Dashboard Connected: " + dstAddress);
 
 
 		}
