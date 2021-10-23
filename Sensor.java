@@ -18,9 +18,10 @@ public class Sensor {
 	final static int DEST_PORT = 49000;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
+	static InetAddress server;
 	static int port= DEST_PORT;
 	
-	static final String DEFAULT_DST_NODE = "broker";
+	static String DEFAULT_DST_NODE = "broker";
 
 
 	final static int MTU = 1500;
@@ -48,7 +49,8 @@ public class Sensor {
 			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
-			dstAddress= new InetSocketAddress("broker", port);
+			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
+			server = InetAddress.getByName(DEFAULT_DST_NODE);
 
 			System.out.println("Sensor Connected: " + socket);
 
@@ -119,7 +121,7 @@ public class Sensor {
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
-					address, port);
+					server, port);
 
 			// send packet
 			socket.send(packet);
