@@ -176,7 +176,7 @@ public class Broker {
 		} 
 
 		try {
-			Broker.socket= new DatagramSocket(Dashboard.port, Dashboard.address);
+			Broker.socket= new DatagramSocket(49000);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
