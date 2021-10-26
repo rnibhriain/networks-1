@@ -13,25 +13,34 @@ import java.util.Scanner;
 public class Broker {
 
 	static Boolean subscribed = false;
-	static DatagramSocket socket;
 	
+	static DatagramSocket socket;
 	static InetAddress address;
 
+	
 	static InetAddress clientAdd;
-
 	static int clientPort;
 	
 	static InetAddress actuatorAdd;
-
 	static int actuatorPort;
 
 	static InetAddress sensorAdd;
-
 	static int sensorPort;
 
+	
 	static String data;
-
 	static final int PACKETSIZE = 65536;
+	
+	Broker () {
+		try {
+			//address = InetAddress.getByName("broker");
+			socket= new DatagramSocket(49000);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		} //catch (UnknownHostException e) {
+			//e.printStackTrace();
+		//}
+	}
 
 	public static void receive () {
 
@@ -166,18 +175,9 @@ public class Broker {
 
 	public static void main(String[] args) {
 
-		try {
-			address = InetAddress.getByName("broker");
-			Broker.socket= new DatagramSocket(50001);
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		listen();
+		
+		Broker current = new Broker();
+		current.listen();
 
 	}
 
