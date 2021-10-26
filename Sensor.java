@@ -15,7 +15,7 @@ public class Sensor {
 
 	static InetSocketAddress dstAddress;
 
-	final static int DEST_PORT = 49000;
+	final static int DEST_PORT = 50001;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
 	static InetAddress server;
@@ -25,7 +25,6 @@ public class Sensor {
 
 
 	final static int MTU = 1500;
-
 	static int roomNo;
 	static int floor;
 	static int id;

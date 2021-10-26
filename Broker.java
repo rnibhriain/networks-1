@@ -170,13 +170,7 @@ public class Broker {
 	public static void main(String[] args) {
 
 		try {
-			address = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-
-		try {
-			Broker.socket= new DatagramSocket(49000);
+			Broker.socket= new DatagramSocket(50001);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
