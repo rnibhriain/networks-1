@@ -93,7 +93,6 @@ public class Dashboard {
 	public static void send (String message) {
 
 		DatagramPacket packet;
-
 		ObjectOutputStream ostream;
 		ByteArrayOutputStream bstream;
 		byte[] buffer;
@@ -107,13 +106,16 @@ public class Dashboard {
 			ostream.writeUTF(message);
 			ostream.flush();
 			buffer= bstream.toByteArray();
+			
+//			address = InetAddress.getByName("broker");
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length);
 
 			// send packet
-
+			
 			packet.setSocketAddress(dstAddress);
+			socket.send(packet);
 
 			System.out.println("Dashboard sent packet '" + message + "'");
 		}
