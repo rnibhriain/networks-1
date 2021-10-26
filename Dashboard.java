@@ -6,6 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -29,10 +30,12 @@ public class Dashboard {
 	public static void main(String[] args) {
 
 		try {
-			address = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
+			socket= new DatagramSocket();
+		}  // InetAddress.getByName(args[0]);
+		catch (SocketException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 
 		Scanner scanner = new Scanner(System.in);
 
