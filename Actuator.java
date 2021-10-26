@@ -146,6 +146,8 @@ public class Actuator {
 			e.printStackTrace();
 		}
 		
+		connect();
+		
 		Actuator actuator = new Actuator();
 		
 		send("subscribe " + actuator.toString()); // Integer.parseInt(args[1]);
