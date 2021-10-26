@@ -17,7 +17,6 @@ public class Actuator {
 
 
 	final static int DEST_PORT = 49000;
-	
 	static final String DEFAULT_DST_NODE = "broker";
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
@@ -41,26 +40,20 @@ public class Actuator {
 
 	
 	public static void connect () {
-
-
 		try {
 			System.out.println("Actuator is Connecting");
 
-			// extract destination from arguments
-			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
-			dstAddress= new InetSocketAddress("broker", port);
+			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
 
-			System.out.println("Actuator Connected: " + socket);
-
-
+			System.out.println("Actuator Connected: " + dstAddress);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	}
+
 
 	public String toString () {
 		String data = "Actuator \nRoom Number: " + roomNo + "\nFloor Number: " + floor + "\nI.D. Number: " + id + "\nStatus: ";
@@ -126,11 +119,11 @@ public class Actuator {
 			ostream.flush();
 			buffer= bstream.toByteArray();
 
-			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length,
-					address, port);
+			packet= new DatagramPacket(buffer, buffer.length);
 
 			// send packet
+			
+			packet.setSocketAddress(dstAddress);
 			socket.send(packet);
 
 			System.out.println("Actuator sent packet '" + message + "'");
@@ -140,16 +133,14 @@ public class Actuator {
 		}
 
 	}
+	
+	
 
 	public static void main(String[] args) {
 
 		try {
-			address= InetAddress.getLocalHost();
 			socket= new DatagramSocket();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   // InetAddress.getByName(args[0]);
+		}  // InetAddress.getByName(args[0]);
 		catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
