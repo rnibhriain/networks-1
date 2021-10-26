@@ -15,7 +15,7 @@ public class Sensor {
 
 	static InetSocketAddress dstAddress;
 
-	final static int DEST_PORT = 50001;
+	final static int DEST_PORT = 49000;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
 	static InetAddress server;
@@ -117,13 +117,14 @@ public class Sensor {
 			ostream.flush();
 			buffer= bstream.toByteArray();
 			
-			address = InetAddress.getByName("broker");
+//			address = InetAddress.getByName("broker");
 
 			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length,
-					address, port);
+			packet= new DatagramPacket(buffer, buffer.length);
 
 			// send packet
+			
+			packet.setSocketAddress(dstAddress);
 			socket.send(packet);
 
 			System.out.println("Sensor sent packet '" + message + "'");
