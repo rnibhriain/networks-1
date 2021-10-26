@@ -12,17 +12,17 @@ import java.util.Scanner;
 public class Dashboard {
 
 	static DatagramSocket socket;
-	
+
 	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
 
 	static InetAddress address;  // InetAddress.getByName(args[0]);;
-	
+
 	static int port= DEST_PORT;
 
 	final static int MTU = 1500;
-	
+
 	static final String DEFAULT_DST_NODE = "broker";
 
 
@@ -109,11 +109,11 @@ public class Dashboard {
 			buffer= bstream.toByteArray();
 
 			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length,
-					dstAddress);
+			packet= new DatagramPacket(buffer, buffer.length);
 
 			// send packet
-			socket.send(packet);
+
+			packet.setSocketAddress(dstAddress);
 
 			System.out.println("Dashboard sent packet '" + message + "'");
 		}
