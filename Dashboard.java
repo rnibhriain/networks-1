@@ -124,23 +124,20 @@ public class Dashboard {
 	}
 
 	public static void connect () {
-
-
 		try {
 			System.out.println("Dashboard is Connecting");
 
+			// extract destination from arguments
+			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
-			dstAddress= new InetSocketAddress("broker", port);
+			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
 
-			System.out.println("Dashboard Connected: " + dstAddress);
-
-
+			System.out.println("Sensor Connected: " + dstAddress);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 }
 
