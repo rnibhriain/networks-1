@@ -110,7 +110,7 @@ public class Dashboard {
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
-					address, port);
+					dstAddress);
 
 			// send packet
 			socket.send(packet);

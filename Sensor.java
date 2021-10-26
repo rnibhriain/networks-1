@@ -51,7 +51,7 @@ public class Sensor {
 
 			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
 
-			System.out.println("Sensor Connected: " + socket);
+			System.out.println("Sensor Connected: " + dstAddress);
 
 
 		}
