@@ -116,10 +116,12 @@ public class Sensor {
 			ostream.writeUTF(message);
 			ostream.flush();
 			buffer= bstream.toByteArray();
+			
+			address = InetAddress.getByName("broker");
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
-					dstAddress);
+					address, port);
 
 			// send packet
 			socket.send(packet);

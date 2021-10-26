@@ -14,8 +14,8 @@ public class Broker {
 
 	static Boolean subscribed = false;
 	static DatagramSocket socket;
-
-	static InetAddress address;  // InetAddress.getByName(args[0]);;
+	
+	static InetAddress address;
 
 	static InetAddress clientAdd;
 
@@ -28,8 +28,6 @@ public class Broker {
 	static InetAddress sensorAdd;
 
 	static int sensorPort;
-
-	static Sensor current = new Sensor();
 
 	static String data;
 
@@ -88,9 +86,8 @@ public class Broker {
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length,
-					address, port);
+					clientAdd, clientPort);
 
-			Thread.sleep(2000);
 			// send packet
 			socket.send(packet);
 
@@ -170,8 +167,12 @@ public class Broker {
 	public static void main(String[] args) {
 
 		try {
+			address = InetAddress.getByName("broker");
 			Broker.socket= new DatagramSocket(50001);
 		} catch (SocketException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
