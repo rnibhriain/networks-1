@@ -86,7 +86,6 @@ public class Actuator extends SenderReceiver{
 			ostream= new ObjectInputStream(bstream);
 
 			String data =  ostream.readUTF();
-			data = ostream.readUTF();
 			String[]  splitString = data.split(":");
 
 			if (splitString[splitString.length-1].equals("on")) {
@@ -140,14 +139,17 @@ public class Actuator extends SenderReceiver{
 		System.out.println("What is the floor number of this actuator?");
 		floor = scanner.nextInt();
 		act.send(TYPE_SUB, "Actuator " + id + ":" + "1" + ":status");
+		
+		boolean finished = false;
 
-		while (true) {
+		while (!finished) {
 			System.out.println("Would you like to wait or unsubscribe?");
 			String received = scanner.next();
 			if (received.equals("wait")) {
 				act.receive();
 			} else if (received.equals("unsubscribe")){
 				act.send(TYPE_UNSUB, "Actuator " + id + ":" + "1" + " :status");
+				finished = true;
 			}
 
 		}
