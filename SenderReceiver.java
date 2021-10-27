@@ -54,12 +54,12 @@ public class SenderReceiver {
 		}
 	}
 
-	public static DatagramPacket packPacket (int type, String message) {
+	public static byte [] packPacket (int type, String message) {
 		byte [] data = null;
 		DatagramPacket packet = null;
 		ObjectOutputStream ostream;
 		ByteArrayOutputStream bstream;
-		byte[] buffer;
+		byte[] buffer = null;
 		message += type + ":";
 		try {
 			bstream= new ByteArrayOutputStream();
@@ -67,13 +67,11 @@ public class SenderReceiver {
 			ostream.writeUTF(message);
 			ostream.flush();
 			buffer= bstream.toByteArray();
-
-			packet= new DatagramPacket(buffer, buffer.length);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		return packet;
+		return buffer;
 	}
 
 }

@@ -1,6 +1,7 @@
 import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -84,9 +85,14 @@ public class Sensor extends SenderReceiver{
 	}
 
 	public static void send (String message) {
-		DatagramPacket packet = packPacket(TYPE_PUB, message);
+		byte [] array = packPacket(TYPE_PUB, message);
+		DatagramPacket packet = new DatagramPacket(array, array.length);
 		packet.setSocketAddress(dstAddress);
-		
+		try {
+			socket.send(packet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
