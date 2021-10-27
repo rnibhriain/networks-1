@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Dashboard {
+public class Dashboard extends SenderReceiver {
 
 	static DatagramSocket socket;
 
@@ -26,7 +26,10 @@ public class Dashboard {
 
 	static final String DEFAULT_DST_NODE = "broker";
 
-
+	Dashboard (DatagramSocket socket) {
+		super(socket);
+	}
+	
 	public static void main(String[] args) {
 
 		try {
@@ -37,9 +40,10 @@ public class Dashboard {
 			e.printStackTrace();
 		}
 
+		Dashboard dash = new Dashboard(socket);
 		Scanner scanner = new Scanner(System.in);
 
-		connect();
+		dash.connect();
 
 		String message = "";
 
@@ -53,8 +57,9 @@ public class Dashboard {
 				System.out.println("Which actuator would u like to communicate with?");
 				message += " " + scanner.next();
 			}
-			send(message);
-			receive();
+			dash.send(message);
+			dash.receive();
+			dash.receive();
 		}
 
 	}
@@ -131,9 +136,7 @@ public class Dashboard {
 	public static void connect () {
 		try {
 			System.out.println("Dashboard is Connecting");
-
-			// extract destination from arguments
-			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
+			
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
 
 			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);

@@ -140,9 +140,8 @@ public class Actuator {
 
 		try {
 			socket= new DatagramSocket();
-		}  // InetAddress.getByName(args[0]);
+		}
 		catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -156,10 +155,6 @@ public class Actuator {
 		
 		if(data.equals("off")) status = false;
 		else status = true;
-
-		// create socket for the connection to broker
-
-
 
 	}
 

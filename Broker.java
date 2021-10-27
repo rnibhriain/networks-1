@@ -6,11 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Broker {
+public class Broker extends SenderReceiver {
 
 	static Boolean subscribed = false;
 	
@@ -31,15 +32,8 @@ public class Broker {
 	static String data;
 	static final int PACKETSIZE = 65536;
 	
-	Broker () {
-		try {
-			//address = InetAddress.getByName("broker");
-			socket= new DatagramSocket(49000);
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} //catch (UnknownHostException e) {
-			//e.printStackTrace();
-		//}
+	Broker () throws SocketException {
+		super(new DatagramSocket(49000));
 	}
 
 	public static void receive () {
@@ -75,7 +69,7 @@ public class Broker {
 
 	}
 
-	public static void send (String data, InetAddress address, int port) {
+	public static void send (String data) {
 
 		DatagramPacket packet;
 
@@ -145,7 +139,6 @@ public class Broker {
 						subscribed = true;
 						clientAdd = packet.getAddress();
 						clientPort = packet.getPort();
-						send(data,clientAdd,clientPort);
 					} else {
 						data = message;
 					}
@@ -176,7 +169,13 @@ public class Broker {
 	public static void main(String[] args) {
 
 		
-		Broker current = new Broker();
+		Broker current =  null;
+		try {
+			current = new Broker();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		current.listen();
 
 	}
