@@ -91,6 +91,8 @@ public class Broker extends SenderReceiver {
 						data = message;
 					}
 					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
+					clientAdd = packet.getAddress();
+					clientPort = packet.getPort();
 					// send an ack
 					send("", TYPE_ACK);
 					
