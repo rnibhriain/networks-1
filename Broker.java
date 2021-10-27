@@ -92,6 +92,8 @@ public class Broker extends SenderReceiver {
 					Scanner scanner = new Scanner(message);
 					String mess = scanner.next();
 					
+					clientAdd = packet.getAddress();
+					clientPort = packet.getPort();
 					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
 					
 					// send an ack
