@@ -121,10 +121,16 @@ public class Sensor extends SenderReceiver{
 				System.out.println("What is the humidity?");
 				humidity = scanner.nextDouble();
 				sensor.send(sensor.toString() + " humidity: " + humidity + "%");
+				
+				// to receive ack
+				sensor.receive();
 			} else if (received.equals("temperature")) {
 				System.out.println("What is the temperature?");
 				temp = scanner.nextDouble();
 				sensor.send(sensor.toString() + " temperature: " + temp + "c");
+				
+				// to receive ack
+				sensor.receive();
 			}
 		}
 
