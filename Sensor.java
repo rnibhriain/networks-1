@@ -21,7 +21,6 @@ public class Sensor extends SenderReceiver{
 	
 	static String DEFAULT_DST_NODE = "broker";
 
-
 	final static int MTU = 1500;
 	static int roomNo;
 	static int floor;
@@ -40,8 +39,6 @@ public class Sensor extends SenderReceiver{
 
 	
 	public static void connect () {
-
-
 		try {
 			System.out.println("Sensor is Connecting");
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
@@ -67,24 +64,18 @@ public class Sensor extends SenderReceiver{
 		byte[] buffer;
 
 		try {
-			System.out.println("Sensor is receiving");
-
-			// create buffer for data, packet and socket
 			buffer= new byte[MTU];
 			packet= new DatagramPacket(buffer, buffer.length);
-
-			// attempt to receive packet
-			System.out.println("Trying to receive");
 			socket.receive(packet);
 
-			// extract data from packet
 			buffer= packet.getData();
 			bstream= new ByteArrayInputStream(buffer);
 			ostream= new ObjectInputStream(bstream);
 
-			// print data and end of program
-			System.out.println("Data: " + ostream.readUTF());
-			System.out.println("ReceiverProcess - Program end");
+			String data =  ostream.readUTF();
+			if (data.equals(Integer.toString(TYPE_ACK))) {
+				System.out.println("Sensor Received acknowledgement");
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -93,7 +84,6 @@ public class Sensor extends SenderReceiver{
 	}
 
 	public static void send (String message) {
-		
 		DatagramPacket packet = packPacket(TYPE_PUB, message);
 		packet.setSocketAddress(dstAddress);
 		

@@ -68,7 +68,6 @@ public class SenderReceiver {
 			ostream.flush();
 			buffer= bstream.toByteArray();
 
-			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length);
 		}
 		catch(Exception e) {
