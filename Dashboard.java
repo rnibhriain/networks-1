@@ -85,11 +85,10 @@ public class Dashboard extends SenderReceiver {
 
 			// extract data from packet
 			buffer= packet.getData();
-			bstream= new ByteArrayInputStream(buffer);
-			ostream= new ObjectInputStream(bstream);
+			
 
 			// print data and end of program
-			System.out.println("Data: " + ostream.readUTF());
+			System.out.println("Data: " + buffer);
 			System.out.println("ReceiverProcess - Program end");
 		}
 		catch(Exception e) {
