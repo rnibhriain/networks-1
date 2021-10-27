@@ -36,34 +36,14 @@ public class Broker extends SenderReceiver {
 		super(socket);
 	}
 
-	public static void send (String data) {
+	public static void send (String data, int type) {
 
-		DatagramPacket packet;
-
-		ObjectOutputStream ostream;
-		ByteArrayOutputStream bstream;
-		byte[] buffer;
-
+		byte [] array = packPacket(type, data);
+		DatagramPacket packet = new DatagramPacket(array, array.length,
+				clientAdd, clientPort);
 		try {
-			System.out.println("Broker is Sending");
-
-			// convert string to byte array
-			bstream= new ByteArrayOutputStream();
-			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(data);
-			ostream.flush();
-			buffer= bstream.toByteArray();
-
-			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length,
-					clientAdd, clientPort);
-
-			// send packet
 			socket.send(packet);
-
-			System.out.println("Broker sent packet '" + data + "'");
-		}
-		catch(Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -111,7 +91,8 @@ public class Broker extends SenderReceiver {
 						data = message;
 					}
 					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
-					sendAck(dstaddress, 1, socket);
+					// send an ack
+					send("", TYPE_ACK);
 					
 					System.out.println("Data: " + message);
 					System.out.println("ReceiverProcess - Program end");

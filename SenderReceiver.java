@@ -27,32 +27,6 @@ public class SenderReceiver {
 		this.socket = socket;
 	}
 
-	public static void sendAck (InetSocketAddress dstAddress, int ID, DatagramSocket socket) throws IOException {
-		String Ack = Integer.toString(TYPE_ACK);
-		byte[] data = null;
-		DatagramPacket packet = null;
-
-		ObjectOutputStream ostream;
-		ByteArrayOutputStream bstream;
-		byte[] buffer;
-
-		try {
-			System.out.println("Dashboard is Sending");
-
-			// convert string "Hello World" to byte array
-			bstream= new ByteArrayOutputStream();
-			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(Ack);
-			ostream.flush();
-			buffer= bstream.toByteArray();
-
-			packet= new DatagramPacket(data, data.length);
-			packet.setSocketAddress(dstAddress);
-			socket.send(packet);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static byte [] packPacket (int type, String message) {
 		byte [] data = null;
@@ -60,11 +34,11 @@ public class SenderReceiver {
 		ObjectOutputStream ostream;
 		ByteArrayOutputStream bstream;
 		byte[] buffer = null;
-		message += type + ":";
+		String finalData = type + ":" + message;
 		try {
 			bstream= new ByteArrayOutputStream();
 			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(message);
+			ostream.writeUTF(finalData);
 			ostream.flush();
 			buffer= bstream.toByteArray();
 		}

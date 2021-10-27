@@ -134,7 +134,7 @@ public class Dashboard extends SenderReceiver {
 		try {
 			System.out.println("Dashboard is Connecting");
 			
-			port= DEST_PORT;                       // Integer.parseInt(args[1]);
+			port= DEST_PORT;
 
 			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
 
