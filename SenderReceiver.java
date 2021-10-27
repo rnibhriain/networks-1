@@ -42,7 +42,7 @@ public class SenderReceiver {
         socket.send(packet);
     }
 	
-	public void sendAck (InetSocketAddress dstAddress, int ID, DatagramSocket socket) throws IOException {
+	public static void sendAck (InetSocketAddress dstAddress, int ID, DatagramSocket socket) throws IOException {
 		
 		byte[] data = null;
         DatagramPacket packet = null;

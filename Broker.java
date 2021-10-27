@@ -135,6 +135,7 @@ public class Broker extends SenderReceiver {
 					message = ostream.readUTF();
 					Scanner scanner = new Scanner(message);
 					String mess = scanner.next();
+					
 					if (mess.equals("subscribe")) {
 						subscribed = true;
 						clientAdd = packet.getAddress();
@@ -142,6 +143,8 @@ public class Broker extends SenderReceiver {
 					} else {
 						data = message;
 					}
+					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
+					sendAck(dstaddress, 1, socket);
 					
 					System.out.println("Data: " + message);
 					System.out.println("ReceiverProcess - Program end");
