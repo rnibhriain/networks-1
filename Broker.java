@@ -36,39 +36,6 @@ public class Broker extends SenderReceiver {
 		super(socket);
 	}
 
-	public static void receive () {
-
-		DatagramPacket packet;
-
-		ObjectInputStream ostream;
-		ByteArrayInputStream bstream;
-		byte[] buffer;
-
-		try {
-			System.out.println("Broker is receiving");
-
-			// create buffer for data, packet and socket
-			buffer= new byte[Dashboard.MTU];
-			packet= new DatagramPacket(buffer, buffer.length);
-
-			// attempt to receive packet
-			System.out.println("Trying to receive");
-			socket.receive(packet);
-
-			// extract data from packet
-			buffer= packet.getData();
-			bstream= new ByteArrayInputStream(buffer);
-			ostream= new ObjectInputStream(bstream);
-
-			// print data and end of program
-
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	public static void send (String data) {
 
 		DatagramPacket packet;
@@ -125,8 +92,6 @@ public class Broker extends SenderReceiver {
 					// attempt to receive packet
 					System.out.println("Trying to receive");
 					socket.receive(packet);
-					
-					onReceipt(packet);
 
 
 					// extract data from packet
