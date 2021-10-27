@@ -34,9 +34,8 @@ public class Dashboard extends SenderReceiver {
 
 		try {
 			socket= new DatagramSocket();
-		}  // InetAddress.getByName(args[0]);
+		} 
 		catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -68,28 +67,35 @@ public class Dashboard extends SenderReceiver {
 
 		DatagramPacket packet;
 
+		DatagramPacket packet;
+
 		ObjectInputStream ostream;
 		ByteArrayInputStream bstream;
 		byte[] buffer;
 
 		try {
-			System.out.println("Dashboard is receiving");
-
-			// create buffer for data, packet and socket
 			buffer= new byte[MTU];
 			packet= new DatagramPacket(buffer, buffer.length);
-
-			// attempt to receive packet
-			System.out.println("Trying to receive");
 			socket.receive(packet);
 
-			// extract data from packet
 			buffer= packet.getData();
-			
+			bstream= new ByteArrayInputStream(buffer);
+			ostream= new ObjectInputStream(bstream);
 
-			// print data and end of program
-			System.out.println("Data: " + buffer);
-			System.out.println("ReceiverProcess - Program end");
+			String data =  ostream.readUTF();
+			String [] message = data.split(":");
+			
+			if (message[0].equals(Integer.toString(TYPE_ACK))) {
+				System.out.println("Sensor Received acknowledgement");
+			} else if (message[0].equals(Integer.toString(TYPE_ACK))) {
+				String string = "";
+				for (int i = 1; i < message.length; i++) {
+					string += message[i];
+				}
+				System.out.println("Sensor Received acknowledgement");
+			} else {
+				System.out.println("Error");
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();

@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,26 +22,34 @@ public class Broker extends SenderReceiver {
 	
 	static InetAddress clientAdd;
 	static int clientPort;
-	
-	static InetAddress actuatorAdd;
-	static int actuatorPort;
 
-	static InetAddress sensorAdd;
-	static int sensorPort;
+	static HashMap <Integer,Subscriber>subscribers;
 
 	
 	static String data;
 	static final int PACKETSIZE = 65536;
 	
+	static public class Subscriber {
+		int id;
+		InetSocketAddress dstAddress;
+		String info;
+		
+		Subscriber (int id, InetSocketAddress address, String info) {
+			this.id = id;
+			this.info = info;
+			this.dstAddress = address;
+		}
+	}
+	
 	Broker (DatagramSocket socket) {
 		super(socket);
 	}
 
-	public static void send (String data, int type) {
+	public static void send (String data, int type, InetSocketAddress address) {
 
 		byte [] array = packPacket(type, data);
-		DatagramPacket packet = new DatagramPacket(array, array.length,
-				clientAdd, clientPort);
+		DatagramPacket packet = new DatagramPacket(array, array.length);
+		packet.setSocketAddress(address);
 		try {
 			socket.send(packet);
 		} catch (IOException e) {
@@ -84,11 +93,9 @@ public class Broker extends SenderReceiver {
 					String mess = scanner.next();
 					
 					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
-					clientAdd = packet.getAddress();
-					clientPort = packet.getPort();
 					
 					// send an ack
-					send("", TYPE_ACK);
+					send("", TYPE_ACK, dstaddress);
 					
 					parse(message);
 
@@ -103,16 +110,35 @@ public class Broker extends SenderReceiver {
 	}
 
 	public static void parse (String message) {
+		System.out.println("Received: " + message);
+		InetSocketAddress add = new InetSocketAddress(clientAdd, clientPort);
 		
-
+		String [] data = message.split(":");
+		if (data[0].equals(Integer.toString(TYPE_UNKNOWN))) {
+			System.out.println("Error");
+		} else if (data[0].equals(Integer.toString(TYPE_PUB))) {
+			Subscriber sub = subscribers.get(Integer.parseInt(data[2]));
+			if (sub.info.equals(data[3])) {
+				String string = "";
+				for (int i = 3; i < data.length; i++) {
+					string += data[i];
+				}
+				send(string, TYPE_PUB, sub.dstAddress);
+			}
+		} else if (data[0].equals(Integer.toString(TYPE_SUB))) {
+			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
+			subscribers.put(Integer.parseInt(data[2]), sub);
+		} else if (data[0].equals(Integer.toString(TYPE_UNSUB))) {
+			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
+			subscribers.remove(Integer.parseInt(data[2]), sub);
+		}
 	}
 
 	public static void main(String[] args) {
 		try {
 			socket= new DatagramSocket(DEFAULT_BROKER_PORT);
-		}  // InetAddress.getByName(args[0]);
+		} 
 		catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
