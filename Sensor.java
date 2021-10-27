@@ -53,7 +53,7 @@ public class Sensor extends SenderReceiver{
 
 	public String toString () {
 
-		return "Sensor " + id + " Room number : " + roomNo + " Floor number : " + floor;
+		return " in" + " Room number : " + roomNo + " Floor number : " + floor;
 	}
 
 	public static void receive () {
@@ -123,14 +123,14 @@ public class Sensor extends SenderReceiver{
 			if (received.equals("humidity")) {
 				System.out.println("What is the humidity?");
 				humidity = scanner.nextDouble();
-				sensor.send(sensor.toString() + " humidity: " + humidity + "%");
+				sensor.send("Sensor " + id + ":" + "1" + ":" + "humidity: " + humidity + "%" + sensor.toString());
 				
 				// to receive ack
 				sensor.receive();
 			} else if (received.equals("temperature")) {
 				System.out.println("What is the temperature?");
 				temp = scanner.nextDouble();
-				sensor.send(sensor.toString() + " temperature: " + temp + "c");
+				sensor.send("Sensor " + id + ":" + "1" + ":" + + temp + "c" + sensor.toString());
 				
 				// to receive ack
 				sensor.receive();

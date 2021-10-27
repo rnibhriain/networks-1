@@ -83,21 +83,12 @@ public class Broker extends SenderReceiver {
 					Scanner scanner = new Scanner(message);
 					String mess = scanner.next();
 					
-					if (mess.equals("subscribe")) {
-						subscribed = true;
-						clientAdd = packet.getAddress();
-						clientPort = packet.getPort();
-					} else {
-						data = message;
-					}
 					InetSocketAddress dstaddress = new InetSocketAddress(clientAdd, clientPort);
 					clientAdd = packet.getAddress();
 					clientPort = packet.getPort();
+					
 					// send an ack
 					send("", TYPE_ACK);
-					
-					System.out.println("Data: " + message);
-					System.out.println("ReceiverProcess - Program end");
 					
 					parse(message);
 
@@ -106,22 +97,17 @@ public class Broker extends SenderReceiver {
 					e.printStackTrace();
 				}
 
-
 			}
 		} catch (Exception e) {if (!(e instanceof SocketException)) e.printStackTrace();}
 
 	}
 
 	public static void parse (String message) {
-
-		System.out.println("Data: " + message);
-		System.out.println("ReceiverProcess - Program end");
+		
 
 	}
 
 	public static void main(String[] args) {
-
-		
 		try {
 			socket= new DatagramSocket(DEFAULT_BROKER_PORT);
 		}  // InetAddress.getByName(args[0]);
@@ -132,7 +118,6 @@ public class Broker extends SenderReceiver {
 
 		Broker broker = new Broker(socket);
 		broker.listen();
-
 	}
 
 

@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -8,13 +9,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
-public class Actuator {
+public class Actuator extends SenderReceiver{
 
 	static DatagramSocket socket;
-	
-	static InetSocketAddress dstAddress;
 
+	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
 	static final String DEFAULT_DST_NODE = "broker";
@@ -23,7 +24,7 @@ public class Actuator {
 	static int port= DEST_PORT;
 
 	final static int MTU = 1500;
-	
+
 	static String data;
 
 	static int roomNo;
@@ -31,14 +32,15 @@ public class Actuator {
 	static int id;
 	static boolean status;
 
-	Actuator () {
+	Actuator (DatagramSocket socket) {
+		super(socket);
 		roomNo = 1;
 		floor = 1;
 		id = 140;
 		status = false;
 	}
 
-	
+
 	public static void connect () {
 		try {
 			System.out.println("Actuator is Connecting");
@@ -60,12 +62,13 @@ public class Actuator {
 
 		if (status) data += "on";
 		else data += "off";
-		
+
 		return data;
-		
+
 	}
 
 	public static void receive () {
+
 
 		DatagramPacket packet;
 
@@ -74,26 +77,29 @@ public class Actuator {
 		byte[] buffer;
 
 		try {
-			System.out.println("Sensor is receiving");
-
-			// create buffer for data, packet and socket
 			buffer= new byte[MTU];
 			packet= new DatagramPacket(buffer, buffer.length);
-
-			// attempt to receive packet
-			System.out.println("Trying to receive");
 			socket.receive(packet);
 
-			// extract data from packet
 			buffer= packet.getData();
 			bstream= new ByteArrayInputStream(buffer);
 			ostream= new ObjectInputStream(bstream);
 
+			String data =  ostream.readUTF();
 			data = ostream.readUTF();
-			
-			// print data and end of program
-			System.out.println("Data: " + data);
-			System.out.println("ReceiverProcess - Program end");
+			String[]  splitString = data.split(":");
+
+			if (splitString[splitString.length-1].equals("on")) {
+				status = true;
+				System.out.println("Sensor has been turned on");
+			} else if (splitString[splitString.length-1].equals("off")) {
+				status = false;
+				System.out.println("Sensor has been turned off");
+			} else if (data.split(":")[0].equals(Integer.toString(TYPE_ACK))) {
+				System.out.println("Sensor Received acknowledgement");
+			} else {
+				System.out.println("Error");
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -101,40 +107,16 @@ public class Actuator {
 
 	}
 
-	public static void send (String message) {
-
-		DatagramPacket packet;
-
-		ObjectOutputStream ostream;
-		ByteArrayOutputStream bstream;
-		byte[] buffer;
-
+	public static void send (int type, String message) {
+		byte [] array = packPacket(type, message);
+		DatagramPacket packet = new DatagramPacket(array, array.length);
+		packet.setSocketAddress(dstAddress);
 		try {
-			System.out.println("Actuator is Sending");
-
-			// convert string "Hello World" to byte array
-			bstream= new ByteArrayOutputStream();
-			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(message);
-			ostream.flush();
-			buffer= bstream.toByteArray();
-
-			packet= new DatagramPacket(buffer, buffer.length);
-
-			// send packet
-			
-			packet.setSocketAddress(dstAddress);
 			socket.send(packet);
-
-			System.out.println("Actuator sent packet '" + message + "'");
-		}
-		catch(Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-	
-	
 
 	public static void main(String[] args) {
 
@@ -144,18 +126,30 @@ public class Actuator {
 		catch (SocketException e) {
 			e.printStackTrace();
 		}
-		
-		connect();
-		
-		Actuator actuator = new Actuator();
-		
-		send("subscribe " + actuator.toString()); // Integer.parseInt(args[1]);
-		
-		receive();
-		
-		if(data.equals("off")) status = false;
-		else status = true;
+
+		Actuator act = new Actuator(socket);
+
+		act.connect();
+
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("What is the ID of this actuator?");
+		id = scanner.nextInt();
+		System.out.println("What is the room number of this actuator?");
+		roomNo = scanner.nextInt();
+		System.out.println("What is the floor number of this actuator?");
+		floor = scanner.nextInt();
+		act.send(TYPE_SUB, "Actuator " + id + ":" + "1" + ":status");
+
+		while (true) {
+			System.out.println("Would you like to wait or unsubscribe?");
+			String received = scanner.next();
+			if (received.equals("wait")) {
+				act.receive();
+			} else if (received.equals("unsubscribe")){
+				act.send(TYPE_UNSUB, "Actuator " + id + ":" + "1" + " :status");
+			}
+
+		}
 
 	}
-
-}
