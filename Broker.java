@@ -32,8 +32,8 @@ public class Broker extends SenderReceiver {
 	static String data;
 	static final int PACKETSIZE = 65536;
 	
-	Broker () throws SocketException {
-		super(new DatagramSocket(49000));
+	Broker (DatagramSocket socket) {
+		super(socket);
 	}
 
 	public static void receive () {
@@ -169,14 +169,16 @@ public class Broker extends SenderReceiver {
 	public static void main(String[] args) {
 
 		
-		Broker current =  null;
 		try {
-			current = new Broker();
-		} catch (SocketException e) {
+			socket= new DatagramSocket(DEFAULT_BROKER_PORT);
+		}  // InetAddress.getByName(args[0]);
+		catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		current.listen();
+
+		Broker broker = new Broker(socket);
+		broker.listen();
 
 	}
 
