@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.util.Scanner;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,16 +10,13 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Sensor {
+public class Sensor extends SenderReceiver{
 
 	static DatagramSocket socket;
 
 	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
-
-	static InetAddress address;  // InetAddress.getByName(args[0]);;
-	static InetAddress server;
 	static int port= DEST_PORT;
 	
 	static String DEFAULT_DST_NODE = "broker";
@@ -28,13 +26,16 @@ public class Sensor {
 	static int roomNo;
 	static int floor;
 	static int id;
-	static int temp;
+	static double temp;
+	static double humidity;
 
-	Sensor () {
+	Sensor (DatagramSocket socket) {
+		super(socket);
 		roomNo = 1;
 		floor = 1;
 		id = 12345;
 		temp = 22;
+		humidity = 32;
 	}
 
 	
@@ -43,13 +44,8 @@ public class Sensor {
 
 		try {
 			System.out.println("Sensor is Connecting");
-
-			// extract destination from arguments
-			address= InetAddress.getLocalHost();   // InetAddress.getByName(args[0]);
 			port= DEST_PORT;                       // Integer.parseInt(args[1]);
-
 			dstAddress= new InetSocketAddress(DEFAULT_DST_NODE, port);
-
 			System.out.println("Sensor Connected: " + dstAddress);
 		}
 		catch(Exception e) {
@@ -59,7 +55,7 @@ public class Sensor {
 
 	public String toString () {
 
-		return "Sensor \nRoom Number: " + roomNo + "\nFloor Number: " + floor + "\nI.D. Number: " + id + "\nTemperature: " + temp + "c";
+		return "Sensor " + id + " Room number : " + roomNo + " Floor number : " + floor;
 	}
 
 	public static void receive () {
@@ -97,59 +93,44 @@ public class Sensor {
 	}
 
 	public static void send (String message) {
-
-		DatagramPacket packet;
-
-		ObjectOutputStream ostream;
-		ByteArrayOutputStream bstream;
-		byte[] buffer;
-
-		try {
-			System.out.println("Sensor is Sending");
-
-			// convert string "Hello World" to byte array
-			bstream= new ByteArrayOutputStream();
-			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(message);
-			ostream.flush();
-			buffer= bstream.toByteArray();
-			
-//			address = InetAddress.getByName("broker");
-
-			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length);
-
-			// send packet
-			
-			packet.setSocketAddress(dstAddress);
-			socket.send(packet);
-
-			System.out.println("Sensor sent packet '" + message + "'");
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
+		
+		DatagramPacket packet = packPacket(TYPE_PUB, message);
+		packet.setSocketAddress(dstAddress);
+		
 	}
 
 	public static void main(String[] args) {
 		
 		connect();
-		
 		try {
 			socket= new DatagramSocket();
-		}  // InetAddress.getByName(args[0]);
-		catch (SocketException e) {
-			// TODO Auto-generated catch block
+		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 		
-		Sensor sensor = new Sensor();
+		Sensor sensor = new Sensor(socket);
+		Scanner scanner = new Scanner(System.in);
 		
-		send("publish " + sensor.toString()); // Integer.parseInt(args[1]);
-
-		// create socket for the connection to broker
-
+		System.out.println("What is the ID of this sensor?");
+		id = scanner.nextInt();
+		System.out.println("What is the room number of this sensor?");
+		roomNo = scanner.nextInt();
+		System.out.println("What is the floor number of this sensor?");
+		floor = scanner.nextInt();
+		
+		while (true) {
+			System.out.println("Which would you like to publish? humidity or temperature");
+			String received = scanner.next();
+			if (received.equals("humidity")) {
+				System.out.println("What is the humidity?");
+				humidity = scanner.nextDouble();
+				sensor.send(sensor.toString() + " humidity: " + humidity + "%");
+			} else if (received.equals("temperature")) {
+				System.out.println("What is the temperature?");
+				temp = scanner.nextDouble();
+				sensor.send(sensor.toString() + " temperature: " + temp + "c");
+			}
+		}
 
 
 	}

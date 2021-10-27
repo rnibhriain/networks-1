@@ -113,8 +113,6 @@ public class Dashboard extends SenderReceiver {
 			ostream.writeUTF(message);
 			ostream.flush();
 			buffer= bstream.toByteArray();
-			
-//			address = InetAddress.getByName("broker");
 
 			// create packet addressed to destination
 			packet= new DatagramPacket(buffer, buffer.length);
