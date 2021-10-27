@@ -125,6 +125,8 @@ public class Broker extends SenderReceiver {
 					// attempt to receive packet
 					System.out.println("Trying to receive");
 					socket.receive(packet);
+					
+					onReceipt(packet);
 
 
 					// extract data from packet
