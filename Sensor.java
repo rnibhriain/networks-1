@@ -74,9 +74,11 @@ public class Sensor extends SenderReceiver{
 			ostream= new ObjectInputStream(bstream);
 
 			String data =  ostream.readUTF();
-			System.out.println(data);
-			if (data.equals(Integer.toString(TYPE_ACK))) {
+			
+			if (data.split(":")[0].equals(Integer.toString(TYPE_ACK))) {
 				System.out.println("Sensor Received acknowledgement");
+			} else {
+				System.out.println("Error");
 			}
 		}
 		catch(Exception e) {
