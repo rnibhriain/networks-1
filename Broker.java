@@ -142,7 +142,6 @@ public class Broker extends SenderReceiver {
 						subscribed = true;
 						clientAdd = packet.getAddress();
 						clientPort = packet.getPort();
-						send(data);
 					} else {
 						data = message;
 					}
