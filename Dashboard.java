@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -17,8 +18,6 @@ public class Dashboard extends SenderReceiver {
 	static InetSocketAddress dstAddress;
 
 	final static int DEST_PORT = 49000;
-
-	static InetAddress address;  // InetAddress.getByName(args[0]);;
 
 	static int port= DEST_PORT;
 
@@ -51,12 +50,28 @@ public class Dashboard extends SenderReceiver {
 			message = scanner.next();
 			if (message.equals("subscribe")) {
 				System.out.println("Which sensor would u like to see?");
-				message += " " + scanner.next();
+				int sensor = scanner.nextInt();
+				System.out.println("Would you like to see humidity or temperature?");
+				message = scanner.next();
+				if (message.equals("humidity")) {
+					send("Dash 1 : " + sensor + " : humidity", TYPE_SUB, dstAddress);
+				} else if (message.equals("temperature")) {
+					send("Dash 1 : " + sensor + " : temperature", TYPE_SUB, dstAddress);
+				}
 			} else if (message.equals("publish")){
 				System.out.println("Which actuator would u like to communicate with?");
-				message += " " + scanner.next();
+				int actuator = scanner.nextInt();
+				System.out.println("Would you like to turn it on or off?");
+				message = scanner.next();
+				if (message.equals("on")) {
+					send("Dash 1 : " + actuator + " : on", TYPE_PUB, dstAddress);
+				} else if (message.equals("off")) {
+					send("Dash 1 : " + actuator + " : off", TYPE_PUB, dstAddress);
+				}
+				
 			}
-			dash.send(message);
+			
+			// receiving ack
 			dash.receive();
 			dash.receive();
 		}
@@ -64,8 +79,6 @@ public class Dashboard extends SenderReceiver {
 	}
 
 	public static void receive () {
-
-		DatagramPacket packet;
 
 		DatagramPacket packet;
 
@@ -87,7 +100,7 @@ public class Dashboard extends SenderReceiver {
 			
 			if (message[0].equals(Integer.toString(TYPE_ACK))) {
 				System.out.println("Sensor Received acknowledgement");
-			} else if (message[0].equals(Integer.toString(TYPE_ACK))) {
+			} else if (message[0].equals(Integer.toString(TYPE_PUB))) {
 				String string = "";
 				for (int i = 1; i < message.length; i++) {
 					string += message[i];
@@ -103,38 +116,19 @@ public class Dashboard extends SenderReceiver {
 
 	}
 
-	public static void send (String message) {
+	public static void send (String data, int type, InetSocketAddress address) {
 
-		DatagramPacket packet;
-		ObjectOutputStream ostream;
-		ByteArrayOutputStream bstream;
-		byte[] buffer;
-
+		byte [] array = packPacket(type, data);
+		DatagramPacket packet = new DatagramPacket(array, array.length);
+		packet.setSocketAddress(address);
 		try {
-			System.out.println("Dashboard is Sending");
-
-			// convert string "Hello World" to byte array
-			bstream= new ByteArrayOutputStream();
-			ostream= new ObjectOutputStream(bstream);
-			ostream.writeUTF(message);
-			ostream.flush();
-			buffer= bstream.toByteArray();
-
-			// create packet addressed to destination
-			packet= new DatagramPacket(buffer, buffer.length);
-
-			// send packet
-			
-			packet.setSocketAddress(dstAddress);
 			socket.send(packet);
-
-			System.out.println("Dashboard sent packet '" + message + "'");
-		}
-		catch(Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
+
 
 	public static void connect () {
 		try {
