@@ -120,16 +120,16 @@ public class Broker extends SenderReceiver {
 		if (data[0].equals(Integer.toString(TYPE_UNKNOWN))) {
 			System.out.println("Error");
 		} else if (data[0].equals(Integer.toString(TYPE_PUB))) {
-			Subscriber sub = subscribers.get(Integer.parseInt(data[2]));
+			Subscriber sub = subscribers.get(Integer.parseInt(data[3]));
 			if (sub.info.equals(data[4])) {
 				String string = "";
 				for (int i = 3; i < data.length; i++) {
-					string += data[i];
+					string += data[i] + ":";
 				}
 				send(string, TYPE_PUB, sub.dstAddress);
 			}
 		} else if (data[0].equals(Integer.toString(TYPE_SUB))) {
-			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
+			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[4]);
 			System.out.println("This is where the problem is: " + Integer.parseInt(data[2]));
 			subscribers.put(Integer.parseInt(data[2]), sub);
 		} else if (data[0].equals(Integer.toString(TYPE_UNSUB))) {
@@ -149,8 +149,8 @@ public class Broker extends SenderReceiver {
 		Broker broker = new Broker(socket);
 		subscribers = new HashMap<Integer, Subscriber>();
 		
-		parse("3:Dash 1 :12:humidity");
-		parse("2:Sensor :12:1:humidity: 34.0% in Room number : 2 Floor number : 3");
+		parse("3:Actuator :32:1:status");
+		parse("2:Dash :1:32:status:on");
 		
 		
 
