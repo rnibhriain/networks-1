@@ -161,7 +161,7 @@ public class Broker extends SenderReceiver {
 		}
 		
 		Broker broker = new Broker(socket);
-		subscribers = new HashMap<Integer, Subscriber>();
+		subscribers = new ArrayList<Subscriber>();
 		
 		parse("3:Dash :1:12:temperature");
 		parse("2:Sensor:12:1:32.0c");
