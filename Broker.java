@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,7 +25,8 @@ public class Broker extends SenderReceiver {
 	static InetAddress clientAdd;
 	static int clientPort;
 
-	static HashMap <Integer,Subscriber>subscribers;
+	//static HashMap <Integer,Subscriber>subscribers;
+	static ArrayList <Subscriber>subscribers;
 
 	
 	static String data;
@@ -111,6 +113,18 @@ public class Broker extends SenderReceiver {
 		} catch (Exception e) {if (!(e instanceof SocketException)) e.printStackTrace();}
 
 	}
+	
+	public static Subscriber getSub (String [] data) {
+		Subscriber sub = null;
+		
+		for (int i = 0; i < subscribers.size(); i++) {
+			Subscriber current = subscribers.get(i);
+			if (current.id == Integer.parseInt(data[3]) && current.info.equals(data[4])) {
+				return current;
+			}
+		}
+		return sub;
+	}
 
 	public static void parse (String message) {
 		System.out.println("Received: " + message);
@@ -120,8 +134,8 @@ public class Broker extends SenderReceiver {
 		if (data[0].equals(Integer.toString(TYPE_UNKNOWN))) {
 			System.out.println("Error");
 		} else if (data[0].equals(Integer.toString(TYPE_PUB))) {
-			Subscriber sub = subscribers.get(Integer.parseInt(data[3]));
-			if (sub.info.equals(data[4])) {
+			Subscriber sub = getSub(data);
+			if (sub != null) {
 				String string = "";
 				for (int i = 3; i < data.length; i++) {
 					string += data[i] + ":";
@@ -131,10 +145,10 @@ public class Broker extends SenderReceiver {
 		} else if (data[0].equals(Integer.toString(TYPE_SUB))) {
 			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[4]);
 			System.out.println("This is where the problem is: " + Integer.parseInt(data[2]));
-			subscribers.put(Integer.parseInt(data[2]), sub);
+			subscribers.add(sub);
 		} else if (data[0].equals(Integer.toString(TYPE_UNSUB))) {
 			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
-			subscribers.remove(Integer.parseInt(data[2]), sub);
+			subscribers.remove(sub);
 		}
 	}
 
