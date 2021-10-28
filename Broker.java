@@ -121,7 +121,7 @@ public class Broker extends SenderReceiver {
 			System.out.println("Error");
 		} else if (data[0].equals(Integer.toString(TYPE_PUB))) {
 			Subscriber sub = subscribers.get(Integer.parseInt(data[2]));
-			if (sub.info.equals(data[3])) {
+			if (sub.info.equals(data[4])) {
 				String string = "";
 				for (int i = 3; i < data.length; i++) {
 					string += data[i];
@@ -149,7 +149,8 @@ public class Broker extends SenderReceiver {
 		Broker broker = new Broker(socket);
 		subscribers = new HashMap<Integer, Subscriber>();
 		
-		parse("3:Dash 1 :12: temperature\r\n");
+		parse("3:Dash 1 :12:humidity");
+		parse("2:Sensor :12:1:humidity: 34.0% in Room number : 2 Floor number : 3");
 		
 		
 

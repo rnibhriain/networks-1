@@ -46,7 +46,7 @@ public class Dashboard extends SenderReceiver {
 		String message = "";
 
 		while (true) {
-			System.out.println("would you like to subscribe or publish?");
+			System.out.println("would you like to subscribe or publish or wait?");
 			message = scanner.next();
 			if (message.equals("subscribe")) {
 				System.out.println("Which sensor would u like to see?");
@@ -55,10 +55,11 @@ public class Dashboard extends SenderReceiver {
 				message = scanner.next();
 				if (message.equals("humidity")) {
 					send("Dash 1 :" + sensor + ": humidity", TYPE_SUB, dstAddress);
+					dash.receive();
 				} else if (message.equals("temperature")) {
 					send("Dash 1 :" + sensor + ": temperature", TYPE_SUB, dstAddress);
+					dash.receive();
 				}
-				dash.receive();
 				dash.receive();
 			} else if (message.equals("publish")){
 				System.out.println("Which actuator would u like to communicate with?");
@@ -70,6 +71,8 @@ public class Dashboard extends SenderReceiver {
 				} else if (message.equals("off")) {
 					send("Dash 1 :" + actuator + ": off", TYPE_PUB, dstAddress);
 				}
+				dash.receive();
+			} else if (message.equals("wait")) {
 				dash.receive();
 			}
 		}
