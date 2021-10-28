@@ -129,6 +129,7 @@ public class Broker extends SenderReceiver {
 			}
 		} else if (data[0].equals(Integer.toString(TYPE_SUB))) {
 			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
+			System.out.println("This is where the problem is: " + Integer.parseInt(data[2]));
 			subscribers.put(Integer.parseInt(data[2]), sub);
 		} else if (data[0].equals(Integer.toString(TYPE_UNSUB))) {
 			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[3]);
