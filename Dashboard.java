@@ -54,26 +54,24 @@ public class Dashboard extends SenderReceiver {
 				System.out.println("Would you like to see humidity or temperature?");
 				message = scanner.next();
 				if (message.equals("humidity")) {
-					send("Dash 1 : " + sensor + " : humidity", TYPE_SUB, dstAddress);
+					send("Dash 1 :" + sensor + ": humidity", TYPE_SUB, dstAddress);
 				} else if (message.equals("temperature")) {
-					send("Dash 1 : " + sensor + " : temperature", TYPE_SUB, dstAddress);
+					send("Dash 1 :" + sensor + ": temperature", TYPE_SUB, dstAddress);
 				}
+				dash.receive();
 			} else if (message.equals("publish")){
 				System.out.println("Which actuator would u like to communicate with?");
 				int actuator = scanner.nextInt();
 				System.out.println("Would you like to turn it on or off?");
 				message = scanner.next();
 				if (message.equals("on")) {
-					send("Dash 1 : " + actuator + " : on", TYPE_PUB, dstAddress);
+					send("Dash 1 :" + actuator + ": on", TYPE_PUB, dstAddress);
 				} else if (message.equals("off")) {
-					send("Dash 1 : " + actuator + " : off", TYPE_PUB, dstAddress);
+					send("Dash 1 :" + actuator + ": off", TYPE_PUB, dstAddress);
 				}
-				
+				dash.receive();
+				dash.receive();
 			}
-			
-			// receiving ack
-			dash.receive();
-			dash.receive();
 		}
 
 	}
@@ -99,13 +97,14 @@ public class Dashboard extends SenderReceiver {
 			String [] message = data.split(":");
 			
 			if (message[0].equals(Integer.toString(TYPE_ACK))) {
-				System.out.println("Sensor Received acknowledgement");
+				System.out.println("Dashboard Received acknowledgement");
 			} else if (message[0].equals(Integer.toString(TYPE_PUB))) {
 				String string = "";
 				for (int i = 1; i < message.length; i++) {
 					string += message[i];
 				}
-				System.out.println("Sensor Received acknowledgement");
+				System.out.println("Dashboard Received data: " + string);
+				
 			} else {
 				System.out.println("Error");
 			}

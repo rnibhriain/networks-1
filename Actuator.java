@@ -138,7 +138,7 @@ public class Actuator extends SenderReceiver{
 		roomNo = scanner.nextInt();
 		System.out.println("What is the floor number of this actuator?");
 		floor = scanner.nextInt();
-		act.send(TYPE_SUB, "Actuator " + id + ":" + "1" + ":status");
+		act.send(TYPE_SUB, "Actuator :" + id + ":" + "1" + ":status");
 		
 		boolean finished = false;
 
@@ -148,7 +148,7 @@ public class Actuator extends SenderReceiver{
 			if (received.equals("wait")) {
 				act.receive();
 			} else if (received.equals("unsubscribe")){
-				act.send(TYPE_UNSUB, "Actuator " + id + ":" + "1" + " :status");
+				act.send(TYPE_UNSUB, "Actuator :" + id + ":" + "1" + " :status");
 				finished = true;
 			}
 
