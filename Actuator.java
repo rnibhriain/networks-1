@@ -90,7 +90,7 @@ public class Actuator extends SenderReceiver{
 
 			if (splitString[splitString.length-1].equals("on")) {
 				status = true;
-				System.out.println("Actuator  has been turned on");
+				System.out.println("Actuator has been turned on");
 			} else if (splitString[splitString.length-1].equals("off")) {
 				status = false;
 				System.out.println("Actuator has been turned off");

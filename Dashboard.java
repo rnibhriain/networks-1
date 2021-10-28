@@ -54,10 +54,10 @@ public class Dashboard extends SenderReceiver {
 				System.out.println("Would you like to see humidity or temperature?");
 				message = scanner.next();
 				if (message.equals("humidity")) {
-					send("Dash 1 :" + sensor + ":humidity", TYPE_SUB, dstAddress);
+					send("Dash :1:" + sensor + ":humidity", TYPE_SUB, dstAddress);
 					dash.receive();
 				} else if (message.equals("temperature")) {
-					send("Dash 1 :" + sensor + ":temperature", TYPE_SUB, dstAddress);
+					send("Dash :1:" + sensor + ":temperature", TYPE_SUB, dstAddress);
 					dash.receive();
 				}
 				dash.receive();
@@ -67,9 +67,9 @@ public class Dashboard extends SenderReceiver {
 				System.out.println("Would you like to turn it on or off?");
 				message = scanner.next();
 				if (message.equals("on")) {
-					send("Dash :1 :" + actuator + ":status:on", TYPE_PUB, dstAddress);
+					send("Dash :1:" + actuator + ":status:on", TYPE_PUB, dstAddress);
 				} else if (message.equals("off")) {
-					send("Dash :1 :" + actuator + ":status:off", TYPE_PUB, dstAddress);
+					send("Dash :1:" + actuator + ":status:off", TYPE_PUB, dstAddress);
 				}
 				dash.receive();
 			} else if (message.equals("wait")) {
