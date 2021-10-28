@@ -12,7 +12,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-import Broker.Subscriber;
 
 public class Broker extends SenderReceiver {
 
