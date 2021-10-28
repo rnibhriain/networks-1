@@ -59,6 +59,7 @@ public class Dashboard extends SenderReceiver {
 					send("Dash 1 :" + sensor + ": temperature", TYPE_SUB, dstAddress);
 				}
 				dash.receive();
+				dash.receive();
 			} else if (message.equals("publish")){
 				System.out.println("Which actuator would u like to communicate with?");
 				int actuator = scanner.nextInt();
@@ -69,7 +70,6 @@ public class Dashboard extends SenderReceiver {
 				} else if (message.equals("off")) {
 					send("Dash 1 :" + actuator + ": off", TYPE_PUB, dstAddress);
 				}
-				dash.receive();
 				dash.receive();
 			}
 		}
