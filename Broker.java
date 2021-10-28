@@ -12,6 +12,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import Broker.Subscriber;
+
 public class Broker extends SenderReceiver {
 
 	static Boolean subscribed = false;
@@ -145,13 +147,13 @@ public class Broker extends SenderReceiver {
 			e.printStackTrace();
 		}
 		
-		subscribers = new HashMap();
+		Broker broker = new Broker(socket);
+		subscribers = new HashMap<Integer, Subscriber>();
 		
 		parse("3:Dash 1 :12: temperature\r\n");
 		
 		
 
-		Broker broker = new Broker(socket);
 		broker.listen();
 	}
 
