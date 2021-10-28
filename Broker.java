@@ -144,6 +144,8 @@ public class Broker extends SenderReceiver {
 		catch (SocketException e) {
 			e.printStackTrace();
 		}
+		
+		subscribers = new HashMap<Integer,Subscriber>();
 
 		Broker broker = new Broker(socket);
 		broker.listen();
