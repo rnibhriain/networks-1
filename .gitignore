@@ -6,3 +6,5 @@
 /Publisher.class
 /Sensor.class
 /Subscriber.class
+/Broker$Subscriber.class
+/SenderReceiver.class

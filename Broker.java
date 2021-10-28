@@ -145,7 +145,11 @@ public class Broker extends SenderReceiver {
 			e.printStackTrace();
 		}
 		
-		subscribers = new HashMap<Integer,Subscriber>();
+		subscribers = new HashMap();
+		
+		parse("3:Dash 1 :12: temperature\r\n");
+		
+		
 
 		Broker broker = new Broker(socket);
 		broker.listen();
