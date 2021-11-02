@@ -114,16 +114,19 @@ public class Broker extends SenderReceiver {
 
 	}
 	
-	public static Subscriber getSub (String [] data) {
+	public static void getSub (String [] data) {
 		Subscriber sub = null;
 		
 		for (int i = 0; i < subscribers.size(); i++) {
 			Subscriber current = subscribers.get(i);
 			if (current.id == Integer.parseInt(data[3]) && current.info.equals(data[4])) {
-				return current;
+				String string = "";
+				for (int j = 3; j < data.length; j++) {
+					string += data[j] + ":";
+				}
+				send(string, TYPE_PUB, sub.dstAddress);
 			}
 		}
-		return sub;
 	}
 
 	public static void parse (String message) {
@@ -134,14 +137,7 @@ public class Broker extends SenderReceiver {
 		if (data[0].equals(Integer.toString(TYPE_UNKNOWN))) {
 			System.out.println("Error");
 		} else if (data[0].equals(Integer.toString(TYPE_PUB))) {
-			Subscriber sub = getSub(data);
-			if (sub != null) {
-				String string = "";
-				for (int i = 3; i < data.length; i++) {
-					string += data[i] + ":";
-				}
-				send(string, TYPE_PUB, sub.dstAddress);
-			}
+			getSub(data);
 		} else if (data[0].equals(Integer.toString(TYPE_SUB))) {
 			Subscriber sub = new Subscriber(Integer.parseInt(data[2]), add, data[4]);
 			System.out.println("This is where the problem is: " + Integer.parseInt(data[2]));
